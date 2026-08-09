@@ -1,0 +1,180 @@
+<!-- SA ID Holiday Checker - Lightning Web Component -->
+<template>
+    <div class="slds-page-header slds-page-header_blurred">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <svg class="slds-icon slds-page-header__title-icon" aria-hidden="true">
+                    <use xlink:href="/assets/icons/custom-icon-48.svg#custom48"></use>
+                </svg>
+                <div class="slds-page-header__title">
+                    <h1 class="slds-page-header__title-label">SA ID Holiday Checker</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slds-container_large slds-p-around_medium">
+        <!-- Info Section -->
+        <div class="slds-box slds-theme_default slds-m-bottom_large">
+            <h2 class="slds-text-heading_medium slds-m-bottom_small">About This Tool</h2>
+            <p class="slds-text-body_regular">
+                This tool allows you to discover public holidays that fall on your birthday
+                by simply entering your South African ID number. Your ID number is securely
+                validated using the checksum algorithm, and only valid searches are stored
+                for analytics purposes.
+            </p>
+            <div class="slds-text-body_small slds-text-color_weak slds-m-top_small">
+                <strong>Note:</strong> Your ID is stored securely and used only to track
+                holiday lookup frequency.
+            </div>
+        </div>
+
+        <!-- Main Search Form -->
+        <div class="slds-box slds-theme_shade slds-m-bottom_large">
+            <div class="slds-form_horizontal">
+                <div class="slds-form-element slds-m-bottom_medium">
+                    <label class="slds-form-element__label" for="idInput">
+                        <abbr class="slds-required" title="required">*</abbr>
+                        <span>South African ID Number</span>
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input
+                            class="slds-input slds-input_size_medium"
+                            id="idInput"
+                            type="text"
+                            placeholder="e.g., 1234567890123"
+                            value={idNumber}
+                            onchange={handleIdInput}
+                            oninput={handleIdInput}
+                            maxlength="13"
+                            aria-label="South African ID Number"
+                        />
+                        <div if:true={validationMessage} class="slds-form-element__help slds-m-top_small">
+                            <span class={validationMessageClass}>
+                                {validationMessage}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-form-element slds-m-bottom_medium">
+                    <label class="slds-form-element__label"></label>
+                    <div class="slds-form-element__control">
+                        <button
+                            class="slds-button slds-button_brand slds-button_size_large"
+                            onclick={handleSearch}
+                            disabled={isSearchDisabled}
+                        >
+                            <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                            </svg>
+                            Search Holidays
+                        </button>
+                        <span if:true={isLoading} class="slds-m-left_medium">
+                            <svg class="slds-icon slds-icon_small slds-animate-spin" aria-hidden="true">
+                                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#spinner"></use>
+                            </svg>
+                            Loading...
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Display -->
+        <div if:true={errorMessage} class="slds-notify slds-notify_alert slds-alert_error slds-m-bottom_large" role="alert">
+            <button class="slds-button slds-button_icon slds-button_icon-inverse slds-button_icon-small slds-notify__close"
+                    onclick={dismissError} aria-label="Close error">
+                <svg class="slds-button__icon" aria-hidden="true">
+                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+            </button>
+            <div class="slds-notify__content">
+                <h2 class="slds-text-heading_small">{errorMessage}</h2>
+            </div>
+        </div>
+
+        <!-- Success Display -->
+        <div if:true={hasResults} class="slds-notify slds-notify_alert slds-alert_success slds-m-bottom_large" role="status">
+            <button class="slds-button slds-button_icon slds-button_icon-inverse slds-button_icon-small slds-notify__close"
+                    onclick={dismissSuccess} aria-label="Close success">
+                <svg class="slds-button__icon" aria-hidden="true">
+                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+            </button>
+            <div class="slds-notify__content">
+                <h2 class="slds-text-heading_small">Search completed successfully!</h2>
+            </div>
+        </div>
+
+        <!-- Decoded Information Panel -->
+        <template if:true={decodedInfo}>
+            <div class="slds-box slds-m-bottom_large slds-theme_light">
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium">Your Information</h2>
+                <div class="slds-grid slds-wrap slds-grid_pull-padded">
+                    <div class="slds-col_padded slds-medium-size_1-of-2">
+                        <div class="slds-text-body_small slds-text-color_weak">Date of Birth</div>
+                        <div class="slds-text-heading_small">{decodedInfo.dateOfBirth}</div>
+                    </div>
+                    <div class="slds-col_padded slds-medium-size_1-of-2">
+                        <div class="slds-text-body_small slds-text-color_weak">Gender</div>
+                        <div class="slds-text-heading_small">{genderDisplay}</div>
+                    </div>
+                    <div class="slds-col_padded slds-medium-size_1-of-2">
+                        <div class="slds-text-body_small slds-text-color_weak">SA Citizen</div>
+                        <div class="slds-text-heading_small">{citizenDisplay}</div>
+                    </div>
+                    <div class="slds-col_padded slds-medium-size_1-of-2">
+                        <div class="slds-text-body_small slds-text-color_weak">Times Searched</div>
+                        <div class="slds-text-heading_small">{searchCount}</div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Holidays Table -->
+        <template if:true={holidays}>
+            <div class="slds-box">
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                    Public Holidays in {birthYear}
+                </h2>
+
+                <div if:true={hasHolidays} class="slds-scrollable_x">
+                    <table class="slds-table slds-table_striped slds-table_bordered slds-table_cell-buffer">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col" class="slds-text-title_caps">Holiday</th>
+                                <th scope="col" class="slds-text-title_caps">Date</th>
+                                <th scope="col" class="slds-text-title_caps">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={holidays} for:item="holiday">
+                                <tr key={holiday.id} class={holiday.rowClass}>
+                                    <td data-label="Holiday">
+                                        <div class="slds-text-body_regular">
+                                            {holiday.name}
+                                            <template if:true={holiday.isbirthday}>
+                                                <span class="slds-badge slds-badge_inverse slds-m-left_small">
+                                                    🎂 Your Birthday!
+                                                </span>
+                                            </template>
+                                        </div>
+                                    </td>
+                                    <td data-label="Date">{holiday.date}</td>
+                                    <td data-label="Description">{holiday.description}</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div if:false={hasHolidays} class="slds-box slds-box_small">
+                    <p class="slds-text-body_regular">
+                        No public holidays found for {birthYear}.
+                    </p>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,218 @@
+/* SA ID Holiday Checker - LWC Styles */
+
+:host {
+    --slds-c-icon-color-background-default: #005fb2;
+}
+
+.holiday-highlight {
+    background-color: #fef9e7;
+    font-weight: 600;
+}
+
+.holiday-highlight td {
+    border-left: 4px solid #ffe135 !important;
+    padding-left: 12px !important;
+}
+
+/* Input styling */
+.slds-input {
+    letter-spacing: 0.05em;
+}
+
+.slds-input:focus {
+    border-color: #005fb2;
+    box-shadow: 0 0 0 3px rgba(0, 95, 178, 0.25);
+}
+
+/* Button styling */
+.slds-button_brand {
+    background-color: #005fb2;
+    border-color: #005fb2;
+    transition: all 0.2s ease-in-out;
+}
+
+.slds-button_brand:hover:not(:disabled) {
+    background-color: #003d7a;
+    box-shadow: 0 2px 8px rgba(0, 95, 178, 0.3);
+}
+
+.slds-button_brand:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Loading spinner */
+.slds-icon_small {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 8px;
+}
+
+.slds-animate-spin {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Alert styling */
+.slds-alert_error {
+    background-color: #fee;
+    border-left: 4px solid #d32f2f;
+    color: #333;
+}
+
+.slds-alert_success {
+    background-color: #efe;
+    border-left: 4px solid #4caf50;
+    color: #333;
+}
+
+/* Form element styling */
+.slds-form-element__help {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.slds-text-color_success {
+    color: #4caf50;
+    font-weight: 500;
+}
+
+.slds-text-color_error {
+    color: #d32f2f;
+    font-weight: 500;
+}
+
+/* Info box styling */
+.slds-box {
+    background-color: #ffffff;
+    border: 1px solid #d8dde6;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.slds-box_small {
+    padding: 0.75rem;
+}
+
+.slds-theme_light {
+    background-color: #f4f6fb;
+    border: 1px solid #ddd;
+}
+
+.slds-theme_shade {
+    background-color: #fafbfc;
+    border: 1px solid #d8dde6;
+}
+
+/* Grid styling for info panel */
+.slds-col_padded {
+    padding: 1rem;
+    border-right: 1px solid #e8e8e8;
+}
+
+.slds-col_padded:last-child {
+    border-right: none;
+}
+
+@media (max-width: 768px) {
+    .slds-col_padded {
+        border-right: none;
+        border-bottom: 1px solid #e8e8e8;
+    }
+
+    .slds-col_padded:last-child {
+        border-bottom: none;
+    }
+}
+
+/* Table styling */
+.slds-table {
+    font-size: 0.875rem;
+}
+
+.slds-table thead {
+    background-color: #f3f3f3;
+    font-weight: 600;
+}
+
+.slds-table tbody tr:hover {
+    background-color: #fafbfc;
+}
+
+.slds-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    background-color: #ffe135;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Responsive typography */
+h1, h2, .slds-text-heading_medium {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.slds-text-body_regular {
+    color: #565656;
+    line-height: 1.5;
+}
+
+.slds-text-body_small {
+    color: #666;
+}
+
+.slds-text-color_weak {
+    color: #999;
+}
+
+/* Page header */
+.slds-page-header {
+    background: linear-gradient(135deg, #005fb2 0%, #003d7a 100%);
+    color: white;
+    margin-bottom: 2rem;
+}
+
+.slds-page-header__title-label {
+    color: white;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+/* Scrollable table on mobile */
+.slds-scrollable_x {
+    overflow-x: auto;
+    margin-bottom: 1rem;
+}
+
+/* Accessibility improvements */
+abbr[title] {
+    text-decoration: none;
+    color: #d32f2f;
+}
+
+/* Print styles */
+@media print {
+    .slds-button {
+        display: none;
+    }
+
+    .slds-input {
+        display: none;
+    }
+
+    .holiday-highlight {
+        background-color: #fff;
+        border-left: 3px solid #000;
+    }
+}
